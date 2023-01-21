@@ -747,11 +747,10 @@ This function is called by `org-babel-execute-src-block'."
 
 
 
-(use-package per-buffer-theme-mode
-         :init (per-buffer-theme-mode 1))
+(per-buffer-theme-mode)
 
 (setq per-buffer-theme-use-timer t)
-(setq per-buffer-theme-timer-idle-delay 0.1)
+(setq per-buffer-theme-timer-idle-delay 0.5)
 (setq per-buffer-theme-default-theme 'doom-palenight)
 (setq per-buffer-theme-themes-alist
       '(((:theme . doom-1337)

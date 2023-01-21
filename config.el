@@ -1,4 +1,3 @@
-
 (setq user-full-name "cherma"
       user-mail-address "hermannschris@googlemail.com")
 
@@ -32,7 +31,7 @@
 
 
 (require 'package)
-
+;;(require 'lilypond)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
@@ -78,20 +77,20 @@
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 shell-mode-hook
+                vterm-mode-hook
                 treemacs-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (set-face-attribute 'default nil :font "JetBrains Mono" :height efs/default-font-size)
-
 ;; Set the fixed pitch face
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height efs/default-font-size)
 
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height efs/default-variable-font-size :weight 'regular)
 
-
-
+(setq doom-font (font-spec :family "JetBrainsMonoNL Nerd Font Mono" :size 16))
+(setq doom-unicode-font (font-spec :family "JetBrainsMonoNL Nerd Font Mono"))
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -101,6 +100,7 @@
   :init (load-theme 'doom-palenight t))
 
 (setq dired-dwim-target t)
+(setq markdown-split-window-direction 'right)
 
 
 (use-package numpydoc
@@ -333,21 +333,34 @@
 ;;				"--header-insertion=never"
 ;;				"--header-insertion-decorators=0"))
 ;;(after! lsp-clangd (set-lsp-priority! 'clangd 2))
+;;
+;;(add-to-list 'org-latex-classes
+;;             '("my-letter"
+;;               "\\documentclass\[%
+;;DIV=14,
+;;fontsize=12pt,
+;;parskip=full,
+;;subject=untitled,
+;;backaddress=true,
+;;fromalign=left,
+;;fromemail=true,
+;;fromphone=true\]\{scrlttr2\}
+;;\[DEFAULT-PACKAGES]
+;;\[PACKAGES]
+;;\[EXTRA]"))
 
 (use-package lsp-mode :commands lsp)
 (use-package lsp-ui :commands lsp-ui-mode)
 
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode cuda-mode) .
-         (lambda () (require 'ccls) (lsp))))
+;;(use-package ccls
+;;  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+;;         (lambda () (require 'ccls) (lsp))))
 
 
 
 (defun efs/lsp-mode-setup()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
-
-
 
 ;;(use-package envrc
 ;;  :commands (envrc-mode)
@@ -362,10 +375,6 @@
   (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
    :config
    (lsp-enable-which-key-integration t))
-
-;;(use-package ccls
-;;  :hook ((c-mode c++-mode objc-mode cuda-mode) .
-;;         (lambda () (require 'ccls) (lsp))))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
@@ -416,6 +425,11 @@
   :hook (python-mode . (lambda()
                      (require 'lsp-pyright)
                      (lsp)))) ; or lsp-deferred
+(use-package ccls
+  :ensure t
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp))))
+
 
 
 ;;(which-key-mode)
@@ -445,20 +459,20 @@
 (add-hook 'after-init-hook 'hide-dotfiles-neotree)
 
 
-(with-eval-after-load 'ox-latex
-(add-to-list 'org-latex-classes
-           '("report-noparts"
-              "\\documentclass{report}
-        [NO-DEFAUKT-PACKAGES]
-        [PACKAGES]
-        [EXTRA]"
-              ("\\chapter{%s}" . "\\chapter*{%s}")
-              ("\\section{%s}" . "\\section*{%s}")
-              ("\\subsection{%s}" . "\\subsection*{%s}")
-              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-              ("\\paragraph{%s}" . "\\paragraph*{%s}")
-              ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-(setq org-image-actual-width nil)
+;;(with-eval-after-load 'ox-latex
+;;(add-to-list 'org-latex-classes
+;;           '("report-noparts"
+;;              "\\documentclass{report}
+;;        [NO-DEFAUKT-PACKAGES]
+;;        [PACKAGES]
+;;        [EXTRA]"
+;;              ("\\chapter{%s}" . "\\chapter*{%s}")
+;;              ("\\section{%s}" . "\\section*{%s}")
+;;              ("\\subsection{%s}" . "\\subsection*{%s}")
+;;              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;              ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;              ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+;;(setq org-image-actual-width nil)
 
 (use-package org-roam
   :ensure t
@@ -709,9 +723,42 @@
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 
+
+(defun org-babel-execute:chess (body params)
+  "Execute a block of Chess code with org-babel.
+This function is called by `org-babel-execute-src-block'."
+  (let* ((output-file (cdr (assq :file params)))
+         (notation (cdr (assq :notation params)))
+         (extension (if (equal notation "fen") ".fen" ".pgn"))
+         (notation-file (make-temp-file "chess-notation" nil extension))
+         (cmd (format "python ~/.config/elchess/elchess.py %s %s %s" notation-file output-file notation)))
+    (with-temp-buffer
+      (insert body)
+      (write-file notation-file))
+    (shell-command cmd)
+    (org-babel-result-to-file output-file)))
+
+(setq org-babel-default-header-args:chess
+      '((:results . "raw")))
+
 (require 'simple-httpd)
 (setq httpd-root "/var/www")
 (httpd-start)
+
+
+
+(use-package per-buffer-theme-mode
+         :init (per-buffer-theme-mode 1))
+
+(setq per-buffer-theme-use-timer t)
+(setq per-buffer-theme-timer-idle-delay 0.1)
+(setq per-buffer-theme-default-theme 'doom-palenight)
+(setq per-buffer-theme-themes-alist
+      '(((:theme . doom-1337)
+         (:buffernames  "*.cu")
+         (:modes cuda-mode))))
+
+
 
 
 (use-package nix-mode
@@ -721,3 +768,5 @@
   :mode "\\.toml\\'")
 
 (envrc-global-mode)
+(setq mastodon-instance-url "https://fem.social/explore"
+          mastodon-active-user "cherma")

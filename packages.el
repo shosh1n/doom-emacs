@@ -76,9 +76,14 @@
 (package! jupyter)
 (package! dap-mode)
 (package! lsp-pyright)
+(package! svg-tag-mode)
 (package! flycheck)
 (package! toml-mode)
 (package! nix-mode)
+(package! scad-mode)
+(package! mastodon)
+(package! per-buffer-theme)
+;;(package! scad-preview)
 (package! virtualenv)
 ;;(package! zmq)
 (package! pyvenv)
@@ -89,12 +94,12 @@
 (package! evil-nerd-commenter)
 
 (package! eterm-256color)
-
+;;(package! engrave-faces)
 (package! lsp-mode)
 ;;beautify some more
 (package! org-pretty-tags :pin "5c7521651b...")
 
-;;(package! engrave-faces :recipe (:local-repo "~/.emacs.d/modules/AddPackage/engrave-faces"))
+;;(package! engrave-faces :recipe (:local-repo "~/.emacs.d/modules/misc/engrave-faces"))
 (package! numpydoc)
 ;;(package! lilypond :recipe (:local-repo "/usr/local/lilypond/usr/share/emacs/site-lisp"))
 

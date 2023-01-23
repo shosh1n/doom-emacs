@@ -60,6 +60,7 @@
 (package! org-pretty-table
   :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8f...")
 ;;use gnuplot
+;;(package! org-mime)
 (package! ccls)
 (package! gnuplot)
 (package! irony)

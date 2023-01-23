@@ -1,5 +1,5 @@
 (setq user-full-name "cherma"
-      user-mail-address "hermannschris@googlemail.com")
+      user-mail-address "hermannschris@gmail.com")
 
 (use-package org-roam-bibtex
   :after org-roam
@@ -430,7 +430,8 @@
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
 
-
+(defun me:c-mode-config ()
+  (c-set-style "ellemtel"))
 
 ;;(which-key-mode)
 ;;(add-hook 'c-mode-hook 'lsp)
@@ -750,7 +751,7 @@ This function is called by `org-babel-execute-src-block'."
 (per-buffer-theme-mode)
 
 (setq per-buffer-theme-use-timer t)
-(setq per-buffer-theme-timer-idle-delay 0.5)
+(setq per-buffer-theme-timer-idle-delay 0.1)
 (setq per-buffer-theme-default-theme 'doom-palenight)
 (setq per-buffer-theme-themes-alist
       '(((:theme . doom-1337)
@@ -766,6 +767,86 @@ This function is called by `org-babel-execute-src-block'."
 (use-package toml-mode
   :mode "\\.toml\\'")
 
+
+;;(after! mu4e
+;;  (setq sendmail-program (executable-find "msmtp")
+;;	send-mail-function 'smtpmail-send-it
+;;	message-sendmail-f-is-evil t
+;;	message-sendmail-extra-arguments '("--read-envelope-from")
+;;	message-send-mail-function 'message-send-mail-with-sendmail))
+
+(after! mu4e
+;;(use-package org-mime)
+  (setq sendmail-program (executable-find "msmtp")
+      send-mail-function #'smtpmail-send-it
+      message-sendmail-f-is-evil t
+      message-sendmail-extra-arguments '("--read-envelope-from"); , "--read-recipients")
+      message-send-mail-function #'message-send-mail-with-sendmail)
+
+  (setq mu4e-compose-format-flowed t)
+
+  (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-get-mail-command "mbsync -a")
+  (setq mu4e-update-interval (* 10 60))
+  (add-to-list 'mu4e-view-actions
+	       '("View in browser" . mu4e-action-view-in-browser) t)
+
+  (set-email-account! "gmail"
+          '((mu4e-drafts-folder  . "/[Google Mail]/Entw&APw-rfe")
+           (mu4e-sent-folder  . "/[Google Mail]/Gesendet")
+           (mu4e-refile-folder  . "/Archiv ")
+           (smtpmail-smtp-user . "hermannschris@gmail.com")
+           (mu4e-trash-folder  . "/[Google Mail]/Papierkorb")
+           (mu4e-compose-signature . "Christoph via Gmail"))t)
+
+         ;; Other Account
+         ;; (make-mu4e-context
+         ;; :name "Personal"
+         ;; :match-func
+         ;;     (lambda (msg)
+         ;;     (when msg
+         ;;         (string-prefix-p "/Fastmail" (mu4e-message-field msg :maildir))))
+         ;; :vars '((user-mail-address . "systemcrafterstest@fastmail.com")
+         ;;         (user-full-name    . "System Crafters Fastmail")
+         ;;         (smtpmail-smtp-server  . "smtp.fastmail.com")
+         ;;         (smtpmail-smtp-service . 465)
+         ;;         (smtpmail-stream-type  . ssl)
+         ;;         (mu4e-compose-signature . "David via Fastmail")
+         ;;         (mu4e-drafts-folder  . "/Fastmail/Drafts")
+         ;;         (mu4e-sent-folder  . "/Fastmail/Sent")
+         ;;         (mu4e-refile-folder  . "/Fastmail/Archive")
+         ;;         (mu4e-trash-folder  . "/Fastmail/Trash")))
+         ;;
+          
+
+(setq mu4e-mail-dir-shortcuts
+ '((:maildir "/Inbox" :key ?i)
+   (:maildir "/[Google Mail]/Alle Nachrichten" :key ?a)
+   (:maildir "/[Google Mail]/Papierkorb" :key ?d)
+   (:maildir "/[Google Mail]/drafts" :key ?D)
+   (:maildir "/[Google Mail]/Wichtig" :key ?i)
+   (:maildir "/[Google Mail]/Gesendet" :key ?s)
+   (:maildir "/[Google Mail]/Markiert" :key ?S)))
+
+(setq mu4e-bookmarks
+  '((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?i)
+    (:name "Today's messages" :query "date:today..now" :key ?t)
+    (:name "Mutter" :query "from:yeshe-dawa" :key ?s)
+    (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
+    (:name "Messages with images" :query "mime:image/*" :key ?p)))
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
+ )
+
+
+
+
+
+
+;;sending mails
+;;
 (envrc-global-mode)
 (setq mastodon-instance-url "https://fem.social/explore"
           mastodon-active-user "cherma")
+
+

@@ -60,7 +60,7 @@
 (package! org-pretty-table
   :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8f...")
 ;;use gnuplot
-;;(package! org-mime)
+(package! org-mime)
 (package! ccls)
 (package! gnuplot)
 (package! irony)
@@ -136,16 +136,14 @@
 
 
 (package! info-colors :pin "47ee73cc19...")
-
-
-
+(package! eziam-themes)
+(package! flucui-themes)
 (package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el"))
   :pin "cc02f25337..." :disable t)
 
-
-
+(package! leuven-theme)
+(package! tao-theme )
 ;;(package! mixed-pitch :recipe (:local-repo "~/.emacs.d/modules/AddPackage/mixed-pitch-master") :pin nil)
-
 (unpin! org-roam)
 (package! simple-httpd)
 (package! websocket)
@@ -155,3 +153,58 @@
 (package! embark-consult)
 (package! ivy-prescient)
 ;;(package! ditaa)
+(package! tree-sitter)
+(package! tree-sitter-langs)
+(package! cpp-auto-include)
+(package! cov :pin "cd3e1995c596cc227124db9537792d8329ffb696")
+(package! realgud-lldb :pin "19a2c0a8b228af543338f3a8e51141a9e23484a5")
+(package! realgud-ipdb :pin "f18f907aa4ddd3e59dc19ca296d4ee2dc5e436b0")
+
+(package! realgud-trepan-xpy
+  :recipe (:host github
+           :repo "realgud/trepan-xpy")
+  :pin "f53fea61a86226dcf5222b2814a549c8f8b8d5a9")
+(package! evil-tree-edit)
+(package! realgud-maxima
+  :recipe (:host github
+           :repo "realgud/realgud-maxima")
+  :pin "74d1615be9105d7f8a8d6d0b9f6d7a91638def11")
+
+(package! gdb-mi
+  :disable t
+  :recipe (:host github
+           :repo "weirdNox/emacs-gdb"
+           :files ("*.el" "*.c" "*.h" "Makefile"))
+  :pin "3313f38ed7d23947992e19f1e464c6d544124144")
+
+(package! super-save
+  :disable t
+  :pin "3313f38ed7d23947992e19f1e464c6d544124144")
+
+(package! carbon-now-sh)
+
+(package! lexic)
+(package! calibredb)
+
+(package! aas
+  :recipe (:host github
+           :repo "ymarco/auto-activating-snippets")
+  :pin "566944e3b336c29d3ac11cd739a954c9d112f3fb")
+
+;;(package! nov)
+
+(package! vundo
+  :recipe (:host github
+           :repo "casouri/vundo")
+  :pin "16a09774ddfbd120d625cdd35fcf480e76e278bb")
+
+(package! focus :pin "9dd85fc474bbc1ebf22c287752c960394fcd465a")
+
+(package! good-scroll
+  :disable EMACS29+
+  :pin "a7ffd5c0e5935cebd545a0570f64949077f71ee3")
+(package! evil-textobj-tree-sitter)
+
+(package! wttrin
+  :recipe `(:local-repo ,(expand-file-name "lisp/wttrin" doom-user-dir))
+  :pin "df5427ce2a5ad4dab652dbb1c4a1834d7ddc2abc")

@@ -1,6 +1,11 @@
 (setq user-full-name "cherma"
       user-mail-address "hermannschris@gmail.com")
 
+(when (daemonp)
+  (add-hook! 'server-after-make-frame-hook
+    (unless (string-match-p "\\*draft\\|\\*stdin\\|emacs-everywhere" (buffer-name))
+      (switch-to-buffer +doom-dashboard-name))))
+
 (use-package org-roam-bibtex
   :after org-roam
   :config
@@ -341,10 +346,12 @@
   (setq org-log-into-drawer t)
 
   (setq org-agenda-files
-	'("~/org/Tasks.org"
-	  "~/org/Habits.org"
-	  "~/org/Birthdays.org"
-          "~/org/Journal.org"))
+	'("~/Dropbox/orgzly/Char.org"
+	  "~/Dropbox/orgzly/Fitness.org"
+	  "~/Dropbox/orgzly/Skill.org"
+          "~/Dropbox/orgzly/Strife.org"
+          "~/Dropbox/orgzly/System.org"
+          "~/Dropbox/orgzly/Termine.org"))
 
   (require 'org-habit)
   (add-to-list 'org-modules 'org-habit)
@@ -922,7 +929,8 @@
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/roam")
+  (org-roam-directory "~/Dropbox/roam/")
+  (org-roam-dailies-directory "journals/")
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -1574,7 +1582,7 @@ This function is called by `org-babel-execute-src-block'."
 (use-package! aas
   :commands aas-mode)
 
-(load! "lisp/mu4e-dashboard")
+(load! "lisp/org-roam-logseq")
 
 (use-package! lexic
   :commands lexic-search lexic-list-dictionary
@@ -1606,6 +1614,7 @@ This function is called by `org-babel-execute-src-block'."
              (read-string "Look up in dictionary: "))
          current-prefix-arg))
   (lexic-search identifier nil nil t))
+
 
 
 (use-package! wttrin

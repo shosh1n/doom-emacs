@@ -63,7 +63,7 @@
 (use-package doom-themes
   :init (load-theme 'doom-palenight t))
 
-(load! "lisp/org-roam-logseq")
+;;(load! "lisp/org-roam-logseq")
 
 
 (setq dired-dwim-target t)
@@ -652,9 +652,9 @@ This function is called by `org-babel-execute-src-block'."
       magit-save-repository-buffers nil
       ;; Don't restore the wconf after quitting magit, it's jarring
       magit-inhibit-save-previous-winconf t
-      transient-values '((magit-commit "--gpg-sign=AE891E7F56DC7789D")
-                         (magit-rebase "--autosquash" "--autostash" "--gpg-sign=AE891E7F56DC7789D")
-                         (magit-pull "--rebase" "--autostash" "--gpg-sign=AE891E7F56DC7789D")))
+      transient-values '((magit-commit "--gpg-sign=AE891E7F56DC7789")
+                         (magit-rebase "--autosquash" "--autostash" "--gpg-sign=AE891E7F56DC7789")
+                         (magit-pull "--rebase" "--autostash" "--gpg-sign=AE891E7F56DC7789")))
 
 ;; Enable git gutter on tramp sessions
 (defun +version-control|git-gutter-maybe ()

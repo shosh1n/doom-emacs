@@ -201,8 +201,8 @@
 
 
 
-(setq! citar-library-paths '("~/Dropbox/papers/")
-       citar-bibliography '("~/Dropbox/reference/book.bib")
+(setq! citar-library-paths '("~/Dropbox/bib/papers/")
+       citar-bibliography '("~/Dropbox/bib/reference/book.bib")
        citar-notes-paths '("~/Dropbox/roam/notes"))
 ;;
 ;;org
@@ -574,12 +574,9 @@ This function is called by `org-babel-execute-src-block'."
 (use-package! conf-data-toml
   :magic ("\\`data_config_version = [0-9]" . conf-data-toml-mode))
 
-(use-package! chatgpt-shell
-  :init
-  (setq! chatgpt-shell-openai-key
-         (lambda ()
-           (auth-source-pick-first-password :host "api.openai.com"))
-         chatgpt-shell-chatgpt-streaming t))
+(setq chatgpt-shell-openai-key
+      (lambda ()
+        (auth-source-pass-get 'secret "gptshell")))
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
@@ -661,6 +658,5 @@ This function is called by `org-babel-execute-src-block'."
   (when buffer-file-name
     (require 'git-gutter-fringe)
     (git-gutter-mode +1)))
-
 
 (envrc-global-mode)

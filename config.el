@@ -11,8 +11,8 @@
 (defvar efs/default-variable-font-size 80)
 
 ;; Make frame transparency overridable
-;; doesnt work on wayland
-(defvar efs/frame-transparency '(90 . 80))
+;; doesnt work on hyprland
+;;(defvar efs/frame-transparency '(90 . 80))
 
 
 ;; The default is 800 kilobytes.  Measured in bytes.

@@ -108,9 +108,6 @@
   (setcdr (assoc "m" all-the-icons-extension-icon-alist)
           (cdr (assoc "matlab" all-the-icons-extension-icon-alist))))
 
-(define-key global-map (kbd "C-c j")
-  (lambda () (interactive) (org-capture nil "jj")))
-
 (after! treemacs
   (require 'dired))
 
@@ -204,9 +201,13 @@
 (setq! citar-library-paths '("~/Dropbox/bib/papers/")
        citar-bibliography '("~/Dropbox/bib/reference/book.bib")
        citar-notes-paths '("~/Dropbox/roam/notes"))
-;;
+
 ;;org
-;;
+
+(define-key global-map (kbd "C-c j")
+  (lambda () (interactive) (org-capture nil "jj")))
+
+
 (with-eval-after-load 'org
   ;; This is needed as of Org 9.2
   (require 'org-tempo)
@@ -284,6 +285,7 @@
      ("idea" . ?i)))
 
 ;; Configure custom agenda views
+;; TODO: REDO
 (setq org-agenda-custom-commands
  '(("d" "Dashboard"
    ((agenda "" ((org-deadline-warning-days 7)))
@@ -374,51 +376,52 @@
               ("\\paragraph{%s}" . "\\paragraph*{%s}")
               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
+;;blogging
 
-
-(use-package org-roam
-  :ensure t
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/Dropbox/roam/")
-  (org-roam-dailies-directory "journals/")
-  (org-roam-completion-everywhere t)
-  (org-roam-capture-templates
-   '(("d" "default" plain
-      "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("l" "programming language" plain
-      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("m" "math" plain
-      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
-      :unnarrowed t)
-     ("a" "Article" plain
-      (file "~/roam/Templates/ArticleNoteTemplate.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
-      :unnarrowed t)
-     ))
-    :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-M-i" . completion-at-point)
-         :map org-roam-dailies-map
-         ("Y" . org-roam-dailies-capture-yesterday)
-         ("T" . org-roam-dailies-caputes-tomorrow))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
-  :config
-  (require 'org-roam-dailies) ;;ensure the keymap is available
-  :config
-  (org-roam-db-autosync-mode))
+;;redo this mess!
+;;(use-package org-roam
+;;  :ensure t
+;;  :init
+;;  (setq org-roam-v2-ack t)
+;;  :custom
+;;  (org-roam-directory "~/Dropbox/roam/")
+;;  (org-roam-dailies-directory "journals/")
+;;  (org-roam-completion-everywhere t)
+;;  (org-roam-capture-templates
+;;   '(("d" "default" plain
+;;      "%?"
+;;      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;      :unnarrowed t)
+;;     ("l" "programming language" plain
+;;      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+;;      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;      :unnarrowed t)
+;;     ("m" "math" plain
+;;      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+;;      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;      :unnarrowed t)
+;;     ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+;;      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+;;      :unnarrowed t)
+;;     ("a" "Article" plain
+;;      (file "~/roam/Templates/ArticleNoteTemplate.org")
+;;      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+;;      :unnarrowed t)
+;;     ))
+;;    :bind (("C-c n l" . org-roam-buffer-toggle)
+;;         ("C-c n f" . org-roam-node-find)
+;;         ("C-c n i" . org-roam-node-insert)
+;;         :map org-mode-map
+;;         ("C-M-i" . completion-at-point)
+;;         :map org-roam-dailies-map
+;;         ("Y" . org-roam-dailies-capture-yesterday)
+;;         ("T" . org-roam-dailies-caputes-tomorrow))
+;;  :bind-keymap
+;;  ("C-c n d" . org-roam-dailies-map)
+;;  :config
+;;  (require 'org-roam-dailies) ;;ensure the keymap is available
+;;  :config
+;;  (org-roam-db-autosync-mode))
 
 (defun org-babel-execute:chess (body params)
   "Execute a block of Chess code with org-babel.
@@ -643,6 +646,7 @@ This function is called by `org-babel-execute-src-block'."
 (after! lsp-ui
   (setq lsp-ui-sideline-enable nil  ; no more useful than flycheck
         lsp-ui-doc-enable nil))     ; redundant with K
+
 
 ;;; :tools magit
 (setq magit-repository-directories '(("~/Projects" . 3))

@@ -161,4 +161,5 @@
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 (package! speed-type)
 (package! virtualenvwrapper)
+(package! detached)
 (provide 'packages)

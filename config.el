@@ -1,20 +1,22 @@
 (setq user-full-name "christoph"
-      user-mail-address "christoph-alexander@proton.me")
+      user-mail-address "christoph-alexander.hermanns@proton.me")
 
 (eval-when-compile
   (require 'use-package))
 ;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
 ;;       in Emacs and init.el will be generated automatically!
 ;; You will most likely need to adjust this font size for your system!
-;;(setq fancy-splash-image "~/.config/doom/Header_Sielaff_Guide_2024_EN.jpg")
 (setq inhibit-startup-message t)
 (defvar my/default-font-size 80)
 (defvar my/default-variable-font-size 80)
 
-;; Make frame transparency overridable
+(require 'exec-path-from-shell)
+(dolist (var '("PATH"))
+  (add-to-list 'exec-path-from-shell-variables var))
+(when (daemonp)
+  (exec-path-from-shell-initialize))
 ;; doesnt work on hyprland
 ;;(defvar my/frame-transparency '(90 . 80))
-
 
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold 100000000)
@@ -40,9 +42,7 @@
 
 ;;set fonts
 (set-face-attribute 'default nil :font "JetBrains Mono" :height my/default-font-size)
-;; Set the fixed pitch face
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height my/default-font-size)
-;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height my/default-variable-font-size :weight 'regular)
 (setq doom-font (font-spec :family "JetBrains Mono" :size 16))
 (setq doom-symbol-font (font-spec :family "JetBrains Mono NL"))
@@ -51,7 +51,8 @@
 
 ;;load this
 (add-to-list 'load-path "/home/hermanns/.config/emacs/.local/straight/repos/tree-sitter-langs/")
-
+(add-to-list 'load-path "/home/hermanns/.config/doom/lisp/")
+;;roam and bib directories
 (setq org-roam-directory "~/.org")
 
 (setq bibtex-completion-bibliography
@@ -151,16 +152,16 @@
 ;;        ("/path/to/org-bibtex-file2.org" . "/path/to/bibtex-file.bib")))
 
 ;;having tabs for emacs-buffer
-(after! centaur-tabs
-  ;; For some reason, setting `centaur-tabs-set-bar' this to `right'
-  ;; instead of Doom's default `left', fixes this issue with Emacs daemon:
-  ;; https://github.com/doomemacs/doomemacs/issues/6647#issuecomment-1229365473
-  (setq centaur-tabs-set-bar 'under
-        centaur-tabs-gray-out-icons 'buffer
-        centaur-tabs-set-modified-marker t
-        centaur-tabs-close-button "⨂"
-        centaur-tabs-modified-marker "⨀"
-        centaur-tabs-style "bar"))
+;;(after! centaur-tabs
+;;  ;; For some reason, setting `centaur-tabs-set-bar' this to `right'
+;;  ;; instead of Doom's default `left', fixes this issue with Emacs daemon:
+;;  ;; https://github.com/doomemacs/doomemacs/issues/6647#issuecomment-1229365473
+;;  (setq centaur-tabs-set-bar 'under
+;;        centaur-tabs-gray-out-icons 'buffer
+;;        centaur-tabs-set-modified-marker t
+;;        centaur-tabs-close-button "⨂"
+;;        centaur-tabs-modified-marker "⨀"
+;;        centaur-tabs-style "bar"))
 
 (after! writeroom-mode
   ;; Show mode line
@@ -428,7 +429,7 @@
 
 (setq dired-dwim-target t)
 
-(use-package! graphviz-dot-mode)
+;;(use-package! graphviz-dot-mode)
 (setq magit-repository-directories '(("~/src". 3))
       magit-save-repository-buffers nil
       magit-inhibit-save-previous-winconf t)
@@ -590,27 +591,6 @@ New features to this version:
 (setq org-ref-pdf-directory arxiv_pdf_loc)
 
 
-;;(defun my/elfeed-entry-to-arxiv ()
-;;  "Fetch an arXiv paper into the local library from the current elfeed entry."
-;;  (interactive)
-;;  (let* ((link (elfeed-entry-link elfeed-show-entry))
-;;         (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-;;         (matched-arxiv-number (match-string 1 link)))
-;;    (when matched-arxiv-number
-;;      (message "Going to arXiv: %s" matched-arxiv-number)
-;;      (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
-;;      message "Update bibtex with pdf file location")
-;;    (let* ((pdf (org-ref-get-pdf-filename matched-arxiv-number)))
-;;      (when (and pdf (file-exists-p pdf))
-;;        (with-current-buffer (find-file-noselect arxiv_bib)
-;;          (bibtex-search-entry matched-arxiv-number)
-;;          (bibtex-set-field "file" pdf)
-;;          (save-buffer)))
-;;      (with-current-buffer (find-file-noselect (concat org-directory "papers.org"))
-;;        (goto-char (point-max))
-;;        (insert (format "** TODO Read paper (cite:%s)\n" matched-arxiv-number))
-;;        (save-buffer)))))
-
 
 
 (map! :leader
@@ -620,6 +600,11 @@ New features to this version:
 
 (after! langtool
   (setq langtool-language-tool-jar "~/opt/LanguageTool-5.3/languagetool-commandline.jar"))
+
+(setq languagetool-java-arguments '("-Dfile.encoding=UTF-8"
+                                    "-cp" "/usr/share/languagetool:/usr/share/java/languagetool/*")
+      languagetool-console-command "org.languagetool.commandline.Main"
+      languagetool-server-command "org.languagetool.server.HTTPServer")
 
 (defun +version-control|git-gutter-maybe ()
   (when buffer-file-name
@@ -642,87 +627,88 @@ New features to this version:
 
 (add-hook 'projectile-after-switch-project-hook 'projectile-pyenv-mode-set)
 
-(use-package! modus-themes
-  :init
-  (setq modus-themes-hl-line '(accented intense)
-        modus-themes-subtle-line-numbers t
-        modus-themes-region '(bg-only no-extend) ;; accented
-        modus-themes-variable-pitch-ui nil
-        modus-themes-fringes 'subtle
-        modus-themes-diffs nil
-        modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-intense-mouseovers t
-        modus-themes-paren-match '(bold intense)
-        modus-themes-syntax '(green-strings)
-        modus-themes-links '(neutral-underline background)
-        modus-themes-mode-line '(borderless padded)
-        modus-themes-tabs-accented nil ;; default
-        modus-themes-completions
-        '((matches . (extrabold intense accented))
-          (selection . (semibold accented intense))
-          (popup . (accented)))
-        modus-themes-headings '((1 . (rainbow 1.4))
-                                (2 . (rainbow 1.3))
-                                (3 . (rainbow 1.2))
-                                (4 . (rainbow bold 1.1))
-                                (t . (rainbow bold)))
-        modus-themes-org-blocks 'gray-background
-        modus-themes-org-agenda
-        '((header-block . (semibold 1.4))
-          (header-date . (workaholic bold-today 1.2))
-          (event . (accented italic varied))
-          (scheduled . rainbow)
-          (habit . traffic-light))
-        modus-themes-markup '(intense background)
-        modus-themes-mail-citations 'intense
-        modus-themes-lang-checkers '(background))
+;;(use-package! modus-themes
+;;  :init
+;;  (setq modus-themes-hl-line '(accented intense)
+;;        modus-themes-subtle-line-numbers t
+;;        modus-themes-region '(bg-only no-extend) ;; accented
+;;        modus-themes-variable-pitch-ui nil
+;;        modus-themes-fringes 'subtle
+;;        modus-themes-diffs nil
+;;        modus-themes-italic-constructs t
+;;        modus-themes-bold-constructs t
+;;        modus-themes-intense-mouseovers t
+;;        modus-themes-paren-match '(bold intense)
+;;        modus-themes-syntax '(green-strings)
+;;        modus-themes-links '(neutral-underline background)
+;;        modus-themes-mode-line '(borderless padded)
+;;        modus-themes-tabs-accented nil ;; default
+;;        modus-themes-completions
+;;        '((matches . (extrabold intense accented))
+;;          (selection . (semibold accented intense))
+;;          (popup . (accented)))
+;;        modus-themes-headings '((1 . (rainbow 1.4))
+;;                                (2 . (rainbow 1.3))
+;;                                (3 . (rainbow 1.2))
+;;                                (4 . (rainbow bold 1.1))
+;;                                (t . (rainbow bold)))
+;;        modus-themes-org-blocks 'gray-background
+;;        modus-themes-org-agenda
+;;        '((header-block . (semibold 1.4))
+;;          (header-date . (workaholic bold-today 1.2))
+;;          (event . (accented italic varied))
+;;          (scheduled . rainbow)
+;;          (habit . traffic-light))
+;;        modus-themes-markup '(intense background)
+;;        modus-themes-mail-citations 'intense
+;;        modus-themes-lang-checkers '(background))
+;;
+;;  (defun +modus-themes-tweak-packages ()
+;;    (modus-themes-with-colors
+;;      (set-face-attribute 'cursor nil :background (modus-themes-color 'blue))
+;;      (set-face-attribute 'font-lock-type-face nil :foreground (modus-themes-color 'magenta-alt))
+;;      (custom-set-faces
+;;       ;; Tweak `evil-mc-mode'
+;;       `(evil-mc-cursor-default-face ((,class :background ,magenta-intense-bg)))
+;;       ;; Tweak `git-gutter-mode'
+;;       `(git-gutter-fr:added ((,class :foreground ,green-fringe-bg)))
+;;       `(git-gutter-fr:deleted ((,class :foreground ,red-fringe-bg)))
+;;       `(git-gutter-fr:modified ((,class :foreground ,yellow-fringe-bg)))
+;;       ;; Tweak `doom-modeline'
+;;       `(doom-modeline-evil-normal-state ((,class :foreground ,green-alt-other)))
+;;       `(doom-modeline-evil-insert-state ((,class :foreground ,red-alt-other)))
+;;       `(doom-modeline-evil-visual-state ((,class :foreground ,magenta-alt)))
+;;       `(doom-modeline-evil-operator-state ((,class :foreground ,blue-alt)))
+;;       `(doom-modeline-evil-motion-state ((,class :foreground ,blue-alt-other)))
+;;       `(doom-modeline-evil-replace-state ((,class :foreground ,yellow-alt)))
+;;       ;; Tweak `diff-hl-mode'
+;;       `(diff-hl-insert ((,class :foreground ,green-fringe-bg)))
+;;       `(diff-hl-delete ((,class :foreground ,red-fringe-bg)))
+;;       `(diff-hl-change ((,class :foreground ,yellow-fringe-bg)))
+;;       ;; Tweak `solaire-mode'
+;;       `(solaire-default-face ((,class :inherit default :background ,bg-alt :foreground ,fg-dim)))
+;;       `(solaire-line-number-face ((,class :inherit solaire-default-face :foreground ,fg-unfocused)))
+;;       `(solaire-hl-line-face ((,class :background ,bg-active)))
+;;       `(solaire-org-hide-face ((,class :background ,bg-alt :foreground ,bg-alt)))
+;;       ;; Tweak `display-fill-column-indicator-mode'
+;;       `(fill-column-indicator ((,class :height 0.3 :background ,bg-inactive :foreground ,bg-inactive)))
+;;       ;; Tweak `mmm-mode'
+;;       `(mmm-cleanup-submode-face ((,class :background ,yellow-refine-bg)))
+;;       `(mmm-code-submode-face ((,class :background ,bg-active)))
+;;       `(mmm-comment-submode-face ((,class :background ,blue-refine-bg)))
+;;       `(mmm-declaration-submode-face ((,class :background ,cyan-refine-bg)))
+;;       `(mmm-default-submode-face ((,class :background ,bg-alt)))
+;;       `(mmm-init-submode-face ((,class :background ,magenta-refine-bg)))
+;;       `(mmm-output-submode-face ((,class :background ,red-refine-bg)))
+;;       `(mmm-special-submode-face ((,class :background ,green-refine-bg))))))
+;;
+;;  :config
+;;  (load-theme 'doom-henna :no-confirm)
+;;  (map! :leader
+;;        :prefix "t" ;; toggle
+;;        :desc "Toggle Modus theme" "m" #'modus-themes-toggle))
 
-  (defun +modus-themes-tweak-packages ()
-    (modus-themes-with-colors
-      (set-face-attribute 'cursor nil :background (modus-themes-color 'blue))
-      (set-face-attribute 'font-lock-type-face nil :foreground (modus-themes-color 'magenta-alt))
-      (custom-set-faces
-       ;; Tweak `evil-mc-mode'
-       `(evil-mc-cursor-default-face ((,class :background ,magenta-intense-bg)))
-       ;; Tweak `git-gutter-mode'
-       `(git-gutter-fr:added ((,class :foreground ,green-fringe-bg)))
-       `(git-gutter-fr:deleted ((,class :foreground ,red-fringe-bg)))
-       `(git-gutter-fr:modified ((,class :foreground ,yellow-fringe-bg)))
-       ;; Tweak `doom-modeline'
-       `(doom-modeline-evil-normal-state ((,class :foreground ,green-alt-other)))
-       `(doom-modeline-evil-insert-state ((,class :foreground ,red-alt-other)))
-       `(doom-modeline-evil-visual-state ((,class :foreground ,magenta-alt)))
-       `(doom-modeline-evil-operator-state ((,class :foreground ,blue-alt)))
-       `(doom-modeline-evil-motion-state ((,class :foreground ,blue-alt-other)))
-       `(doom-modeline-evil-replace-state ((,class :foreground ,yellow-alt)))
-       ;; Tweak `diff-hl-mode'
-       `(diff-hl-insert ((,class :foreground ,green-fringe-bg)))
-       `(diff-hl-delete ((,class :foreground ,red-fringe-bg)))
-       `(diff-hl-change ((,class :foreground ,yellow-fringe-bg)))
-       ;; Tweak `solaire-mode'
-       `(solaire-default-face ((,class :inherit default :background ,bg-alt :foreground ,fg-dim)))
-       `(solaire-line-number-face ((,class :inherit solaire-default-face :foreground ,fg-unfocused)))
-       `(solaire-hl-line-face ((,class :background ,bg-active)))
-       `(solaire-org-hide-face ((,class :background ,bg-alt :foreground ,bg-alt)))
-       ;; Tweak `display-fill-column-indicator-mode'
-       `(fill-column-indicator ((,class :height 0.3 :background ,bg-inactive :foreground ,bg-inactive)))
-       ;; Tweak `mmm-mode'
-       `(mmm-cleanup-submode-face ((,class :background ,yellow-refine-bg)))
-       `(mmm-code-submode-face ((,class :background ,bg-active)))
-       `(mmm-comment-submode-face ((,class :background ,blue-refine-bg)))
-       `(mmm-declaration-submode-face ((,class :background ,cyan-refine-bg)))
-       `(mmm-default-submode-face ((,class :background ,bg-alt)))
-       `(mmm-init-submode-face ((,class :background ,magenta-refine-bg)))
-       `(mmm-output-submode-face ((,class :background ,red-refine-bg)))
-       `(mmm-special-submode-face ((,class :background ,green-refine-bg))))))
-
-  :config
-  (load-theme 'doom-henna :no-confirm)
-  (map! :leader
-        :prefix "t" ;; toggle
-        :desc "Toggle Modus theme" "m" #'modus-themes-toggle))
-
+(load-theme 'doom-henna :no-confirm)
 (setq lsp-log-io nil)
 (after! ccls
   (setq ccls-initialization-options
@@ -732,13 +718,7 @@ New features to this version:
           :completion (:detailedLabel t)))
   (set-lsp-priority! 'ccls 2))
 
-;;(use-package! conventional-commit
-;;  :after (magit company)
-;;  :config
-;;  (add-hook
-;;   'git-commit-setup-hook
-;;   (lambda ()
-;;     (add-to-list 'company-backends 'company-conventional-commits))))
+
 
 (use-package! blamer
   :commands (blamer-mode)
@@ -757,26 +737,29 @@ New features to this version:
                    :height 80
                    :italic t))))
 
+;;;;;;;;;;;COMBULATE-------------------------------------------------->
 ;;(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-(use-package combobulate
-  :preface
-  ;; You can customize Combobulate's key prefix here.
-  ;; Note that you may have to restart Emacs for this to take effect!
-  (setq combobulate-key-prefix "C-c o")
+;;(use-package combobulate
+;;  :preface
+;;  ;; You can customize Combobulate's key prefix here.
+;;  ;; Note that you may have to restart Emacs for this to take effect!
+;;  (setq combobulate-key-prefix "C-c o")
+;;
+;;  ;; Optional, but recommended.
+;;  ;;
+;;  ;; You can manually enable Combobulate with `M-x
+;;  ;; combobulate-mode'.
+;;  :hook ((python-ts-mode . combobulate-mode)
+;;         (js-mode . combobulate-mode)
+;;         (css-mode . combobulate-mode)
+;;         (yaml-mode . combobulate-mode)
+;;         (typescript-mode . combobulate-mode)
+;;         (tsx-mode . combobulate-mode))
+;;  ;; Amend this to the directory where you keep Combobulate's source
+;;  ;; code.
+;;  :load-path ("/home/hermanns/.config/emacs/addOns/combobulate"))
+;;;;;;;;;;;COMBULATE-------------------------------------------------->
 
-  ;; Optional, but recommended.
-  ;;
-  ;; You can manually enable Combobulate with `M-x
-  ;; combobulate-mode'.
-  :hook ((python-ts-mode . combobulate-mode)
-         (js-mode . combobulate-mode)
-         (css-mode . combobulate-mode)
-         (yaml-mode . combobulate-mode)
-         (typescript-mode . combobulate-mode)
-         (tsx-mode . combobulate-mode))
-  ;; Amend this to the directory where you keep Combobulate's source
-  ;; code.
-  :load-path ("/home/hermanns/.config/emacs/addOns/combobulate"))
 (defun open-remote-file()
   "open a remote file using tramp."
   (interactive)
@@ -790,9 +773,7 @@ New features to this version:
             (nth (random 7) '(meandering walking hiking going pathing going Si-lining))
             )
   )
-
 (evil-global-set-key 'normal (kbd "SPC o w") 'hc/open-work-folder)
-
 (evil-global-set-key 'normal (kbd "SPC o g") 'open-remote-file)
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
@@ -802,68 +783,101 @@ New features to this version:
 (add-hook 'python-ts-mode-hook #'python-ts-mode-setup)
 (require 'iso-transl)
 
-;;(add-to-list 'major-mode-remap-alist '(cpp-mode . cpp-ts-mode))
-;;(defun cpp-ts-mode-setup ()
-;;  (treesit-font-lock-recompute-features
-;;   '(function variable)'(definition)))
-;;(add-hook 'cpp-ts-mode-hook #'cpp-ts-mode-setup)
+(use-package eglot
+  :ensure t
+  :defer t
+  :bind (:map eglot-mode-map
+              ("C-c C-d" . eldoc)
+              ("C-c C-e" . eglot-rename)
+              ("C-c C-o" . python-sort-imports)
+              ("C-c C-f" . eglot-format-buffer))
+  :hook ((python-ts-mode . eglot-ensure)
+         (python-ts-mode . flyspell-prog-mode)
+         (python-ts-mode . superword-mode)
+         (python-ts-mode . hs-minor-mode)
+         (python-ts-mode (lambda () (set-fill-column 88))))
+  :config
+  (setq-default eglot-workspace-configuration
+                '((:pylsp . (:configurationSources ["flake8"]
+                             :plugins (
+                                       :pycodestyle (:enabled :json-false)
+                                       :mccabe (:enabled :json-false)
+                                       :pyflakes (:enabled :json-false)
+                                       :flake8 (:enabled :json-false
+                                                :maxLineLenght 88)
+                                       :ruff (:enabled t
+                                              :lineLength 88)
+                                       :pydocstyle (:enabled t
+                                                    :convention "numpy")
+                                       :yapf (:enabled :json-false)
+                                       :autopep8 (:enabled :json-false)
+                                       :black (:enabled t
+                                               :line_length 88
+                                               :cache_config t)))))))
 
-;;
-;;(use-package rtags
-;;  :ensure nil
-;;  :hook (c++-mode . rtags-start-process-unless-running)
-;;  :config (setq rtags-completions-enabled t
-;; rtags-path "/home/hermanns/.config/emacs/modules/ide/rtags/src/rtags.el"
-;; rtags-rc-binary-name "/home/hermanns/.config/emacs/modules/ide/rtags/bin/rc"
-;; rtags-use-helm t
-;; rtags-rdm-binary-name "/home/hermanns/.config/emacs/modules/ide/rtags/bin/rdm")
-;;  :bind (("C-c E" . rtags-find-symbol)
-;;   ("C-c e" . rtags-find-symbol-at-point)
-;;   ("C-c o" . rtags-find-references-at-point)
-;;   ("C-c s" . rtags-find-file)
-;;   ("C-c v" . rtags-find-virtuals-at-point)
-;;   ("C-c F" . rtags-fixit)
-;;   ("C-c f" . rtags-location-stack-forward)
-;;   ("C-c b" . rtags-location-stack-back)
-;;   ("C-c n" . rtags-next-match)
-;;   ("C-c p" . rtags-previous-match)
-;;   ("C-c P" . rtags-preprocess-file)
-;;   ("C-c R" . rtags-rename-symbol)
-;;   ("C-c x" . rtags-show-rtags-buffer)
-;;   ("C-c T" . rtags-print-symbol-info)
-;;   ("C-c t" . rtags-symbol-type)
-;;   ("C-c I" . rtags-include-file)
-;;   ("C-c i" . rtags-get-include-file-for-symbol))
-;;  )
-;;(setq rtags-display-result-backend 'helm)
-;;(add-hook 'c++-mode-hook
-;;          (lambda () (setq flycheck-clang-language-standard "c++11")))
 
-;;(require 'cmake-ide)
-;;(cmake-ide-setup)
-;; Set cmake-ide-flags-c++ to use C++11
-;;(setq cmake-ide-flags-c++ (append '("-std=c++11")))
-;;(setq rtags-autostart-diagnostics t)
-;;(rtags-diagnostics)
 
-;; Turn flycheck on everywhere
-;;(global-flycheck-mode)
-                                        ;(rtags-diagnostics)
-;;(global-company-mode)
-;;(rtags-autostart-diagnostics t)
-;;(add-hook 'c++-mode-hook
-;;          (lambda () (setq flycheck-clang-language-standard "c++11")))
-;;(push 'company-rtags company-backends)
-;;;;(envrc-global-mode)
 
-;;(defun my-flycheck-rtags-setup ()
-;;  (flycheck-select-checker 'rtags)
-;;  (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-;;  (setq-local flycheck-check-syntax-automatically nil)
-;;  (add-hook 'c-mode-hook #'my-flycheck-rtags-setup)
-;;  (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
-;;  (add-hook 'objc-mode-hook #'my-flycheck-rtags-setup))
-;;(global-company-mode)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 (require 'cursory)
 
@@ -915,10 +929,25 @@ New features to this version:
 (unless (boundp 'org-latex-classes)
   (setq org-latex-classes nil))
 
+;;(add-hook 'julia-mode-hook #'rainbow-delimiters-mode-enable)
+;;(add-hook! 'julia-mode-hook
+;;  (setq-local lsp-enable-folding t
+;;             lsp-folding-range-limit 100))
 
 
+;;(setq julia-repl-executable-records
+;;      '((default "/home/shoshin/julia-1.10.4/bin/julia")))
 
+;;(setenv "PATH" (concat (getenv "PATH") ":/home/shoshin/julia-1.10.4/bin/julia"))
+;;(add-to-list 'exec-path "/home/shoshin/julia-1.10.4/bin/julia")
+;;(setq julia-shell-executable "/home/shoshin/julia-1.10.4/bin/julia")
 
+;;(use-package julia-repl
+;;  :ensure t
+;;  :config
+;;  (setq julia-repl-executable-records
+;;        '((default "julia")))
+;;  (add-hook 'julia-mode-hook 'julia-repl-mode))
 
 (add-to-list 'org-latex-classes
              '("ethz"
@@ -1003,3 +1032,30 @@ New features to this version:
                                   ("\\chapter{%s}" . "\\chapter*{%s}")
                                   ("\\section{%s}" . "\\section*{%s}")
                                   ("\\subsection{%s}" . "\\subsection*{%s}")))
+
+(with-eval-after-load 'ox-latex
+(add-to-list 'org-latex-classes
+           '("report-noparts"
+              "\\documentclass{report}
+        [NO-DEFAULT-PACKAGES]
+        [PACKAGES]
+        [EXTRA]"
+              ("\\chapter{%s}" . "\\chapter*{%s}")
+              ("\\section{%s}" . "\\section*{%s}")
+              ("\\subsection{%s}" . "\\subsection*{%s}")
+              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+              ("\\paragraph{%s}" . "\\paragraph*{%s}")
+              ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
+(eval-after-load 'ox-koma-letter
+  '(progn
+     (add-to-list 'org-latex-classes
+                  '("my-letter"
+                    "\\documentclass\{scrlttr2\}
+     \\usepackage[english]{babel}
+     \\setkomavar{frombank}{(1234)\\,567\\,890}
+     \[DEFAULT-PACKAGES]
+     \[PACKAGES]
+     \[EXTRA]"))
+
+     (setq org-koma-letter-default-class "my-letter")))

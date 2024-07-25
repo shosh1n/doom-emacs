@@ -118,16 +118,16 @@
 (package! chatgpt-shell :recipe (:host github :repo "xenodium/chatgpt-shell"))
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
-(package! graphviz-dot-mode :pin "3642a0a5f4...")
+;;(package! graphviz-dot-mode :pin "3642a0a5f4...")
 
 ;;create useful images of my code
 (package! carbon-now-sh)
 
 ;;misc
-(package! xkcd :pin "66e928706f...")
+;;(package! xkcd :pin "66e928706f...")
 ;;getting colors from emacs-themes
-(package! theme-magic :pin "844c4311bd...")
-(package! ess-view :pin "925cafd876...")
+;;(package! theme-magic :pin "844c4311bd...")
+;;(package! ess-view :pin "925cafd876...")
 ;;some themes
 (package! eziam-themes)
 (package! flucui-themes)
@@ -167,5 +167,6 @@
 (package! helm-bibtex)
 (package! pdf-tools)
 (package! org-roam-bibtex)
+(package! exec-path-from-shell)
 ;;(package! conventional-commit)
 (provide 'packages)

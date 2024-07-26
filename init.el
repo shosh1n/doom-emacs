@@ -13,7 +13,6 @@
 ;;
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
-(doom! :config (private +xdg))
 (doom! :input
        ;;chinese
        ;;japanese
@@ -23,7 +22,7 @@
        company           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ivy               ; a search engine for love and life
+       ;;ivy               ; a search engine for love and life
        vertico           ; the search engine of the future
 
        :ui
@@ -33,7 +32,7 @@
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        ;;(emoji +unicode)  ; 🙂
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       hydra
+       ;;hydra
        indent-guides     ; highlighted indent columns
        ;;ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
@@ -194,6 +193,6 @@
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 75))
 (add-to-list 'default-frame-alist '(alpha . 90))
 ;;(add-to-list 'default-frame-alist '(alpha . (85 . 75)))
-(add-to-list 'exec-path "/home/shoshin/.nix-profile/bin")
-(add-to-list 'exec-path "/etc/profiles/per-user/shoshin/bin")
-(add-to-list 'exec-path "/run/current-system/sw/bin")
+;;(add-to-list 'exec-path "/home/shoshin/.nix-profile/bin")
+;;(add-to-list 'exec-path "/etc/profiles/per-user/shoshin/bin")
+;;(add-to-list 'exec-path "/run/current-system/sw/bin")

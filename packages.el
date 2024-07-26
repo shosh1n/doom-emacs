@@ -50,24 +50,24 @@
                                         ;(unpin! t)
 ;;
 ;;useability & completion of sorts...
-(package! irony)
-(package! company)
-(package! diredfl)
-(package! info-colors :pin "47ee73cc19...")
-(package! org-pretty-table
-  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8f...")
-(package! org-mime)
-(package! embark)
-(package! embark-consult)
-(package! ivy-prescient)
+;;(package! irony)
+;;(package! company)
+;;(package! diredfl)
+;;(package! info-colors :pin "47ee73cc19...")
+;;(package! org-pretty-table
+;;  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8f...")
+;;(package! org-mime)
+;;(package! embark)
+;;(package! embark-consult)
+;;(package! ivy-prescient)
 (package! yasnippet-snippets)
 (package! org-bullets)
-(package! svg-tag-mode)
+;;(package! svg-tag-mode)
 ;;auto activating snippets
-(package! aas
-  :recipe (:host github
-           :repo "ymarco/auto-activating-snippets")
-  :pin "566944e3b336c29d3ac11cd739a954c9d112f3fb")
+;;(package! aas
+;;  :recipe (:host github
+;;           :repo "ymarco/auto-activating-snippets")
+;;  :pin "566944e3b336c29d3ac11cd739a954c9d112f3fb")
 
 
 ;;IDE-Stuff
@@ -79,15 +79,15 @@
 ;;visual candy e.g. graphical progress-bar
 
 ;;syntax checking
-(package! flycheck)
+;;(package! flycheck)
 (package! toml-mode)
-;;(package! nix-mode)
+(package! nix-mode)
 (package! scad-mode)
 
 ;;social stuff
 ;;(package! elcord)
 ;;(package! per-buffer-theme)
-;;(package! scad-preview)
+(package! scad-preview)
 ;;(package! virtualenv)
 ;;(package! zmq)
 ;;(package! pyvenv)
@@ -105,20 +105,20 @@
 (package! elfeed)
 (package! elfeed-score)
 (package! citar)
-;;documenting in numpy-style
+;documenting in numpy-style
 (package! numpydoc)
 ;;show dependencies in org-documents
-(package! org-graph-view :recipe (:host github :repo "alphapapa/org-graph-view") :pin "13314338d7...")
+;;(package! org-graph-view :recipe (:host github :repo "alphapapa/org-graph-view") :pin "13314338d7...")
 (package! org-roam-bibtex )
 ;;render latex on mouse-cursor-exit
 (package! org-fragtog)
 (package! quarto-mode)
-(package! conf-data-toml :recipe (:host github :repo "tecosaur/conf-data-toml"))
-(package! shell-maker :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
-(package! chatgpt-shell :recipe (:host github :repo "xenodium/chatgpt-shell"))
-(package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
-;;(package! graphviz-dot-mode :pin "3642a0a5f4...")
+;;(package! conf-data-toml :recipe (:host github :repo "tecosaur/conf-data-toml"))
+;;(package! shell-maker :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
+;;(package! chatgpt-shell :recipe (:host github :repo "xenodium/chatgpt-shell"))
+;;(package! copilot
+;;  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+;(package! graphviz-dot-mode :pin "3642a0a5f4...")
 
 ;;create useful images of my code
 (package! carbon-now-sh)
@@ -134,33 +134,32 @@
 (package! leuven-theme)
 (package! tao-theme )
 ;;view large files
-(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el"))
-  :pin "cc02f25337..." :disable t)
+;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el"))
+;;  :pin "cc02f25337..." :disable t)
                                         ;(package! realgud-ipdb :pin "f18f907aa4ddd3e59dc19ca296d4ee2dc5e436b0")
-(package! super-save
-  :disable t
-  :pin "3313f38ed7d23947992e19f1e464c6d544124144")
+;;(package! super-save
+;;  :disable t
+;;  :pin "3313f38ed7d23947992e19f1e464c6d544124144")
 ;;rotating windows in emacs
 ;;(package! rotate :pin "4e9ac3ff80...")
 ;;(package! nov)
-;;visual-undo history
-(package! vundo
-  :recipe (:host github
-           :repo "casouri/vundo")
-  :pin "16a09774ddfbd120d625cdd35fcf480e76e278bb")
-;;(package! focus :pin "9dd85fc474bbc1ebf22c287752c960394fcd465a")
-(package! good-scroll
-  :disable EMACS29+
-  :pin "a7ffd5c0e5935cebd545a0570f64949077f71ee3")
-;;(package! evil-textobj-tree-sitter)
-(package! shell-maker :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
-(package! chatgpt-shell :recipe (:host github :repo "xenodium/chatgpt-shell"))
-(package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+(package! vundo)
+;;  :recipe (:host github
+;;           :repo "casouri/vundo")
+;;  :pin "16a09774ddfbd120d625cdd35fcf480e76e278bb")
+;;;;(package! focus :pin "9dd85fc474bbc1ebf22c287752c960394fcd465a")
+;;(package! good-scroll
+;;  :disable EMACS29+
+;;  :pin "a7ffd5c0e5935cebd545a0570f64949077f71ee3")
+;;;;(package! evil-textobj-tree-sitter)
+;;(package! shell-maker :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
+;;(package! chatgpt-shell :recipe (:host github :repo "xenodium/chatgpt-shell"))
+;;(package! copilot
+;;  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 (package! speed-type)
-(package! virtualenvwrapper)
-(package! detached)
-(package! modus-themes)
+;;(package! virtualenvwrapper)
+;;(package! detached)
+;;(package! modus-themes)
 (package! cursory)
 (package! hyperbole)
 (package! org-roam-ui)

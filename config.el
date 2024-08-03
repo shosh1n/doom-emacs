@@ -341,6 +341,10 @@
         ("mw" "Weight" table-line (file+headline "~/.org/Metrics.org" "Weight")
          "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
+(use-package! orgnote
+  :defer t
+  :hook (org-mode . orgnote-sync-mode))
+
 ;;;;(defun my/show-server-edit-buffer (buffer)
 ;;;;  ;; TODO: Set a transient keymap to close with 'C-c C-c'
 ;;;;  (split-window-vertically -15)
@@ -357,6 +361,15 @@
 ;;;; If a popup does happen, don't resize windows to be equal-sized
 ;;;;(setq even-window-sizes nil)
 ;;;;
+;;;;
+(use-package embark
+  :bind
+  (("C-c e" . embark-act)
+   ("M-." . embark-dwim)
+   ("C-h B" . embark-bindings))
+
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
 ;;;;(use-package embark
 ;;;;  :ensure t
 ;;;;  :bind (("C-S-a" . embark-act)
@@ -528,13 +541,11 @@ New features to this version:
       :desc "Elfeed" "n e" #'elfeed)
 
 ;;;;langtool
-;;(after! langtool
-;;  (setq langtool-language-tool-jar "~/opt/LanguageTool-5.3/languagetool-commandline.jar"))
-;;
-;;(setq languagetool-java-arguments '("-Dfile.encoding=UTF-8"
-;;                                    "-cp" "/usr/share/languagetool:/usr/share/java/languagetool/*")
-;;      languagetool-console-command "org.languagetool.commandline.Main"
-;;      languagetool-server-command "org.languagetool.server.HTTPServer")
+(require 'langtool)
+(setq langtool-language-tool-jar "/home/shoshin/Documents/lang-tool/LanguageTool-stable/LanguageTool-6.4/languagetool-commandline.jar")
+(add-hook 'org-mode-hook
+          (lambda () (set (make-local-variable 'langtool-java-user-arguments)
+                          '("-Dfile.encoding=UTF-8"))))
 
 (with-eval-after-load 'org
     (setq org-directory "~/.org/"))
@@ -596,6 +607,7 @@ New features to this version:
 
 (evil-global-set-key 'normal (kbd "SPC o w") 'hc/open-work-folder)
 (evil-global-set-key 'normal (kbd "SPC o g") 'open-remote-file)
+(evil-global-set-key 'normal (kbd "C-c l") 'universal-argument)
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
@@ -630,6 +642,35 @@ New features to this version:
                                        :black (:enabled t
                                                :line_length 88
                                                :cache_config t)))))))
+(use-package python-pytest)
+(use-package python-black)
+(use-package python-isort)
+(use-package ruff-format)
+
+;;(use-package pet
+;;  :ensure-system-package (dasel sqlite3)
+;;  :config
+;;  (add-hook 'python-mode-hook
+;;            (lambda ()
+;;              (setq-local python-shell-interpreter (pet-executeable-find "/home/shoshin/miniconda3/bin/python3")
+;;                          python-shell-virtualenv-root (pet-virtualenv-root))
+;;              (pet-flycheck-setup)
+;;              (flycheck-mode)
+;;              (lsp)
+;;              (setq-local python-pytest-executable (pet-executable-find "/home/shoshin/miniconda3/bin/pytest"))
+;;
+;;
+;;              (when-let ((black-executable (pet-executable-find "black")))
+;;                (setq-local python-black-command black-executable)
+;;                (python-black-on-save-mode))
+;;
+;;              (when-let ((isort-executable (pet-executable-find "isort")))
+;;                (setq-local python-isort-command isort-executable)
+;;                (python-isort-on-save-mode)))))
+
+              ;;(setq-local flycheck-python-mypy-executable "/home/shoshin/miniconda3/bin/mypy")
+
+
 ;;(use-package cursory
 ;;(setq cursory-presets
 ;;      '((bar . ( :cursor-type (bar . 2)

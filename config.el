@@ -129,6 +129,8 @@
       treemacs-hide-dot-git-directory t
       treemacs-width 46
       )
+(setq lsp-lens-enable nil)
+(setq undo-tree-enable-undo-in-region nil)
 
 (autoload 'helm-bibtex "helm-bibtex" "" t)
 (require 'org-ref)
@@ -341,9 +343,9 @@
         ("mw" "Weight" table-line (file+headline "~/.org/Metrics.org" "Weight")
          "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
-(use-package! orgnote
-  :defer t
-  :hook (org-mode . orgnote-sync-mode))
+;;(use-package! orgnote
+;;  :defer t
+;;  :hook (org-mode . orgnote-sync-mode))
 
 ;;;;(defun my/show-server-edit-buffer (buffer)
 ;;;;  ;; TODO: Set a transient keymap to close with 'C-c C-c'
@@ -610,6 +612,12 @@ New features to this version:
 (evil-global-set-key 'normal (kbd "C-c l") 'universal-argument)
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+
+
+(load-file (concat doom-user-dir "glsl-mode.el"))
+(eval-after-load "glsl-mode"
+    '(dolist (pattern '("\\.fs\\'" "\\.vs\\'"))
+        (add-to-list 'auto-mode-alist (cons pattern 'glsl-mode))))
 
 (use-package eglot
   :ensure t
